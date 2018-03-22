@@ -43,6 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common\ExampleBase.cs" />
+    <Compile Include="Common\QuestionManager.cs" />
+    <Compile Include="Common\SysConsole.cs" />
+    <Compile Include="Common\XsltVariable.cs" />
     <Compile Include="Examples\IfElseExample.cs" />
     <Compile Include="Examples\StringFormatExample.cs" />
     <Compile Include="Program.cs" />
