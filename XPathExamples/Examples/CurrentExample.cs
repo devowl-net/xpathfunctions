@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml.XPath;
 using System.Xml.Xsl;
 
@@ -9,34 +8,39 @@ using XPathExamples.Common;
 namespace XPathExamples.Examples
 {
     /// <summary>
-    /// String.Format() example.
+    /// current function example.
     /// </summary>
-    public class StringFormatExample : ExampleBase
+    public class CurrentExample : ExampleBase
     {
         /// <inheritdoc/>
-        public override string Name => @"""format"" string.Format() function";
+        public override string Name => @"""current"" function";
 
         /// <inheritdoc/>
         public override void Execute()
         {
             var sourceXml = @"<?xml version=""1.0""?>
 <catalog>
-    <book>
-        <author gender=""male"">Mike</author>
+    <book id=""bk101"">
+        <author gender=""male"">Gambardella, Matthew</author>
+        <title>XML Developer's Guide</title>
+        <genre>Computer</genre>
+        <price>44.95</price>
     </book>
 </catalog>";
 
             var document = XPathDocumentFromString(sourceXml);
             var navigator = document.CreateNavigator();
-            var query = @"
-format
-(
-    '{0} is {1}', /catalog/book/author/text(), /catalog/book/author/@gender
-)";
+            var query = @"current()/@gender";
+
             Print("[XML]", sourceXml);
             Print("[Query]", query);
 
-            var result = navigator.Evaluate(query, new StringFormatXsltContext());
+            var currentNode = navigator.SelectSingleNode("/catalog/book/author");
+
+            Print("[CurrentNode]", query);
+
+            var result = navigator.Evaluate(query, new CurrentXsltContext(currentNode));
+
             Print("[Result]", result);
         }
     }
@@ -44,16 +48,16 @@ format
     /// <summary>
     /// Custom XsltContext.
     /// </summary>
-    public class StringFormatXsltContext : XsltContext
+    public class CurrentXsltContext : XsltContext
     {
         private readonly IDictionary<string, IXsltContextFunction> _functions;
 
         /// <summary>
         /// <see cref="IfElseXsltContext"/> constructor.
         /// </summary>
-        public StringFormatXsltContext()
+        public CurrentXsltContext(XPathNavigator currentNode)
         {
-            _functions = new Dictionary<string, IXsltContextFunction> { { "format", new FunStringFormat() } };
+            _functions = new Dictionary<string, IXsltContextFunction> { { "current", new FuncCurrent(currentNode) } };
         }
 
         /// <inheritdoc/>
@@ -82,15 +86,25 @@ format
     }
 
     /// <summary>
-    /// "format" function context.
+    /// "current" function context.
     /// </summary>
-    public class FunStringFormat : IXsltContextFunction
+    public class FuncCurrent : IXsltContextFunction
     {
-        /// <inheritdoc/>
-        public int Minargs => 1;
+        private readonly XPathNavigator _currentNode;
+
+        /// <summary>
+        /// <see cref="FuncCurrent"/> constructor.
+        /// </summary>
+        public FuncCurrent(XPathNavigator currentNode)
+        {
+            _currentNode = currentNode;
+        }
 
         /// <inheritdoc/>
-        public int Maxargs => int.MaxValue;
+        public int Minargs => 0;
+
+        /// <inheritdoc/>
+        public int Maxargs => 0;
 
         /// <inheritdoc/>
         public XPathResultType ReturnType => XPathResultType.Any;
@@ -101,27 +115,7 @@ format
         /// <inheritdoc/>
         public object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)
         {
-            var arguments = ParseArguments(args.Skip(1)).ToArray();
-            return string.Format((args[0] ?? string.Empty).ToString(), arguments);
-        }
-
-        private IEnumerable<object> ParseArguments(IEnumerable<object> args)
-        {
-            foreach (var arg in args)
-            {
-                var iterator = arg as XPathNodeIterator;
-                if (iterator != null && iterator.Count > 0)
-                {
-                    while (iterator.MoveNext())
-                    {
-                        yield return iterator.Current;
-                    }
-                }
-                else
-                {
-                    yield return arg;
-                }
-            }
+            return _currentNode.Select(".");
         }
     }
 }

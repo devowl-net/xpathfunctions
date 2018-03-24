@@ -1,25 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using XPathExamples.Common;
 using XPathExamples.Examples;
 
 namespace XPathExamples
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             var examples = new ExampleBase[]
             {
                 new IfElseExample(),
+                new StringFormatExample(),
+                new CurrentExample(),
+                new XPathIteratorMergeExample(), 
             };
 
             while (true)
             {
-                var choosenExample = QuestionManager.Choose(examples, example => example.Name, "Please choose an example");
+                var choosenExample = QuestionManager.Choose(
+                    examples,
+                    example => example.Name,
+                    "Please choose an example");
                 Console.WriteLine();
                 choosenExample.Execute();
                 Console.ReadKey();

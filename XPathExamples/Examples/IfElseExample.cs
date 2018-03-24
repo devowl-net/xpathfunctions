@@ -46,14 +46,11 @@ if-else
         '[false] cheap price'
     )
 )";
-            SysConsole.WriteInfoLine("[XML]");
-            Print(sourceXml);
-            SysConsole.WriteInfoLine("[Query]");
-            Print(query);
-            SysConsole.WriteInfoLine("[Result]");
+            Print("[XML]", sourceXml);
+            Print("[Query]", query);
             
             var result = navigator.Evaluate(query, new IfElseXsltContext());
-            Print(result);
+            Print("[Result]", result);
         }
     }
 
@@ -76,10 +73,7 @@ if-else
         public override bool Whitespace => true;
 
         /// <inheritdoc/>
-        public override IXsltContextVariable ResolveVariable(string prefix, string name)
-        {
-            return null;
-        }
+        public override IXsltContextVariable ResolveVariable(string prefix, string name) { return null; }
 
         /// <inheritdoc/>
         public override IXsltContextFunction ResolveFunction(string prefix, string name, XPathResultType[] args)
@@ -94,16 +88,10 @@ if-else
         }
 
         /// <inheritdoc/>
-        public override bool PreserveWhitespace(XPathNavigator node)
-        {
-            return true;
-        }
+        public override bool PreserveWhitespace(XPathNavigator node) { return true; }
 
         /// <inheritdoc/>
-        public override int CompareDocument(string baseUri, string nextbaseUri)
-        {
-            return 0;
-        }
+        public override int CompareDocument(string baseUri, string nextbaseUri) { return 0; }
     }
 
     /// <summary>
@@ -121,7 +109,7 @@ if-else
         public XPathResultType ReturnType => XPathResultType.Any;
 
         /// <inheritdoc/>
-        public XPathResultType[] ArgTypes => new XPathResultType[0];
+        public XPathResultType[] ArgTypes => null;
 
         /// <inheritdoc/>
         public object Invoke(XsltContext xsltContext, object[] args, XPathNavigator docContext)

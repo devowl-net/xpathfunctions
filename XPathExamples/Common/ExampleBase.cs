@@ -23,9 +23,12 @@ namespace XPathExamples.Common
         /// <summary>
         /// Print <see cref="XPathNodeIterator"/> value.
         /// </summary>
+        /// <param name="description">Result description.</param>
         /// <param name="result">Evaluation result.</param>
-        protected void Print(object result)
+        protected static void Print(string description, object result)
         {
+            Console.WriteLine();
+            SysConsole.WriteInfoLine(description);
             if (result == null)
             {
                 return;
