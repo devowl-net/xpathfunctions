@@ -30,16 +30,16 @@ namespace XPathExamples.Examples
 
             var document = XPathDocumentFromString(sourceXml);
             var navigator = document.CreateNavigator();
-            var query = @"current()/@gender";
+            var query1 = @"/catalog/book/author";
+            var query2 = @"current()/@gender";
 
             Print("[XML]", sourceXml);
-            Print("[Query]", query);
+            Print("[Query1]", query1);
+            var currentNode = navigator.SelectSingleNode(query1);
 
-            var currentNode = navigator.SelectSingleNode("/catalog/book/author");
+            Print("[SubQuery2]", query2);
 
-            Print("[CurrentNode]", query);
-
-            var result = navigator.Evaluate(query, new CurrentXsltContext(currentNode));
+            var result = navigator.Evaluate(query2, new CurrentXsltContext(currentNode));
 
             Print("[Result]", result);
         }
