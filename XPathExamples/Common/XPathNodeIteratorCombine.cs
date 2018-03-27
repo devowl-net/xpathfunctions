@@ -17,7 +17,7 @@ namespace XPathExamples.Common
         private int _currentPosition = -1;
 
         /// <summary>
-        /// Создание экземпляра класса <see cref="XPathNodeIteratorCombine"/>.
+        /// <see cref="XPathNodeIteratorCombine"/> constructor.
         /// </summary>
         public XPathNodeIteratorCombine(params XPathNodeIterator[] nodeIterators)
         {
